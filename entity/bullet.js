@@ -1,6 +1,5 @@
 function Bullet(poz, size, speed, type) {
-  this.poz = poz;
-  this.size = size;
+  Box.call(this, poz, size);
   this.speed = speed;
   this.dmg = 5;
   this.init(type);
@@ -22,13 +21,6 @@ Bullet.prototype.render = function() {
    poz.x, poz.y,
    this.size.x, this.size.y
  )
-}
-
-Bullet.prototype.getLeftCorner = function() {
-  return {
-    x: this.poz.x - this.size.x / 2,
-    y: this.poz.y - this.size.y / 2,
-  }
 }
 
 Bullet.prototype.move = function(vector) {

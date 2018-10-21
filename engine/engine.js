@@ -1,34 +1,52 @@
 function Engine() {
   this.map = new Map();
   this.player = new Player();
-  this.runGameLoop = function() {
-    this.map.render();
-    this.player.render();
-    this.player.updatePlayerPosition();
-    this.applyBulletLogic();
-    this.applyEnemyLogic();
-    this.checkCollisions();
-    this.drawScore();
-    this.enemyShoot();
-  }
 
+  //array of player bullets
   this.bulletList = [];
+  //array of enemy bullets
   this.enemyBulletList = [];
+
   this.wave = new Wave();
 }
 
+/*
+  The main Game Loop used to handle all the game Logic
+*/
+Engine.prototype.runGameLoop = function() {
+  this.map.render();
+  this.player.render();
+  this.player.updatePlayerPosition();
+  this.applyBulletLogic();
+  this.applyEnemyLogic();
+  this.checkCollisions();
+  this.drawScore();
+  this.enemyShoot();
+}
+
+/*
+  The click handler.
+  For now, each time the player clicks, the ship is shooting 1 projectile.
+*/
 Engine.prototype.handleClick = function() {
   this.playerShoot();
 }
 
+/*
+  Create a player bullet and adds it into the  player bullet list.
+*/
 Engine.prototype.playerShoot = function() {
-  var speed = 10;
+  var bullet_speed = 10;
   var poz = this.player.getCannonPoz();
   var size = {x:10, y:10}
-  var b = new Bullet(poz, size, speed, 'fire');
+  var b = new Bullet(poz, size, bullet_speed, 'fire');
   this.bulletList.push(b);
 }
 
+/*
+  Take each enemy in the current level and check if he can shoot, then Create
+  a bullet object and add it to the enemy bullet list
+*/
 Engine.prototype.enemyShoot = function() {
   var enemyList = this.wave.getEnemyList();
   for(var i = 0; i < enemyList.length; i++) {
@@ -48,7 +66,7 @@ Engine.prototype.enemyShoot = function() {
 }
 
 Engine.prototype.applyBulletLogic = function() {
-  for(var i = 0 ; i < this.bulletList.length; i++) {
+  for(var i = 0; i < this.bulletList.length; i++) {
     var b = this.bulletList[i];
     b.render();
     b.move(-1);
@@ -57,18 +75,20 @@ Engine.prototype.applyBulletLogic = function() {
       this.bulletList.splice(i, 1);
   }
 
-  for(var i = 0 ; i < this.enemyBulletList.length; i++) {
+  for(var i = 0; i < this.enemyBulletList.length; i++) {
     var x = this.enemyBulletList[i];
     x.render();
     x.move(1);
+
+    if(x.poz.y > 610)
+      this.enemyBulletList.splice(i, 1);
   }
 }
 
 Engine.prototype.applyEnemyLogic = function() {
   var enemyList = this.wave.getEnemyList();
-
   this.wave.changeDirection();
-  for(var i = 0 ; i < enemyList.length; i++) {
+  for(var i = 0; i < enemyList.length; i++) {
     var e = enemyList[i];
     e.render();
     e.move();
@@ -106,7 +126,6 @@ Engine.prototype.checkCollisions = function() {
   }//for
 
   this.wave.setEnemyList(list);
-
   var list = this.wave.getEnemyList();
     for(var j = 0; j < this.enemyBulletList.length; j++) {
       var b = this.enemyBulletList[j];

@@ -1,12 +1,12 @@
 function Player() {
-  this.poz = {x:300, y:470};
-  this.size = {x:50, y:50};
+  Box.call(this, {x:300, y:470}, {x:50, y:50})
   this.velocity = {
     "up":false,
     "down":false,
     "left":false,
     "right":false
-  }
+  };
+  
   this.speed = 7;
   this.score = 0;
   this.lives = 3;
@@ -50,13 +50,6 @@ Player.prototype.init = function() {
   }
 }
 
-Player.prototype.getCannonPoz = function() {
-  return {
-    x: this.poz.x,
-    y: this.poz.y
-  }
-}
-
 Player.prototype.renderHp = function() {
   for(var i = 0; i < this.lives; i++) {
     this.hpList[i].render();
@@ -74,13 +67,6 @@ Player.prototype.render = function() {
     this.size.x, this.size.y
   )
   this.renderHp();
-}
-
-Player.prototype.getLeftCorner = function() {
-  return {
-    x: this.poz.x - this.size.x / 2,
-    y: this.poz.y - this.size.y / 2
-  }
 }
 
 Player.prototype.updatePlayerVelocity = function(key, value) {

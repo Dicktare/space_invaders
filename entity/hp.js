@@ -1,6 +1,5 @@
 function Hp(poz, size) {
-  this.poz = poz;
-  this.size = size;
+  Box.call(this, poz, size);
   this.img = null;
   this.spriteSize = null;
   this.init();
@@ -22,11 +21,4 @@ Hp.prototype.render = function() {
     poz.x, poz.y,
     this.size.x, this.size.y
   )
-}
-
-Hp.prototype.getLeftCorner = function() {
-  return {
-    x: this.poz.x - this.size.x / 2,
-    y: this.poz.y - this.size.y / 2
-  }
 }
