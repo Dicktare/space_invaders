@@ -1,10 +1,3 @@
-//the canvas context used to draw all the objects in the game
-var ctx = null;
-
-//the object that handles the logic in the game
-var engine = null;
-
-
 /*
 After the window is loaded:
   - init the engine
@@ -13,7 +6,8 @@ After the window is loaded:
 */
 window.onload = function() {
   engine = new Engine();
-  ctx = document.getElementById('gameCanvas').getContext('2d');
+  gameCanvas = document.getElementById('gameCanvas');
+  ctx = gameCanvas.getContext('2d');
   setInterval(function(){ engine.runGameLoop() }, 1000 / 32);
 }
 
@@ -47,5 +41,28 @@ window.addEventListener("keydown",
 */
 window.addEventListener("click",
   function(e) {
-    engine.handleClick();
+    var poz = getMousePos(gameCanvas, e);
+    if(isInsideCanvas(gameCanvas, poz)) {
+      engine.handleClick(poz);
+    }
   },false);
+
+
+
+function getMousePos(canvas, evt) {
+  var rect = canvas.getBoundingClientRect();
+  return {
+    x: Math.floor(evt.clientX - rect.left),
+    y: Math.floor(evt.clientY - rect.top)
+  };
+}
+
+function isInsideCanvas(canvas, poz) {
+  if(poz.x > 0 &&
+     poz.y > 0 &&
+     poz.x < canvas.width &&
+     poz.y < canvas.height)
+     return true;
+
+  return false;
+}

@@ -1,35 +1,28 @@
 function Engine() {
-  this.map = new Map();
-  this.player = new Player();
+  this.menu = new Menu();
+  this.over_menu = new gameOver();
+  this.state = 'menu';
+}
 
+Engine.prototype.initNewGame = function() {
   //array of player bullets
   this.bulletList = [];
+
   //array of enemy bullets
   this.enemyBulletList = [];
-
   this.wave = new Wave();
+
+  this.map = new Map();
+  this.player = new Player();
 }
 
 /*
   The main Game Loop used to handle all the game Logic
 */
 Engine.prototype.runGameLoop = function() {
-  this.map.render();
-  this.player.render();
-  this.player.updatePlayerPosition();
-  this.applyBulletLogic();
-  this.applyEnemyLogic();
-  this.checkCollisions();
-  this.drawScore();
-  this.enemyShoot();
-}
-
-/*
-  The click handler.
-  For now, each time the player clicks, the ship is shooting 1 projectile.
-*/
-Engine.prototype.handleClick = function() {
-  this.playerShoot();
+ if(gameLoops[this.state] != null) {
+   gameLoops[this.state]();
+  }
 }
 
 /*
@@ -152,4 +145,10 @@ Engine.prototype.drawScore = function() {
   ctx.fillStyle = 'red';
   ctx.font = "15px Arial";
   ctx.fillText("Score: "+ this.player.score, 500, 25);
+}
+
+Engine.prototype.checkGameOver = function() {
+  if(this.player.lives <= 0) {
+    this.state = 'over';
+  }
 }

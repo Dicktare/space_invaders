@@ -1,3 +1,9 @@
+//the canvas context used to draw all the objects in the game
+var ctx = null;
+var gameCanvas = null;
+//the object that handles the logic in the game
+var engine = null;
+
 /*
 #NOTATIONS:
  src - the source for the image
@@ -103,4 +109,93 @@ Timer information for the update loop
 var Timer = {
   updateTime: 1000
 }
+//==========================================================/
+
+/*
+#Game States:
+Timer information for the game states
+//==========================================================/
+*/
+gameStates = ['menu', 'pause', 'score', 'over', 'play'];
+
+var mouseMoveHandlers = {
+  'menu' : function(poz){ },
+  'pause': function(poz){ },
+  'score': function(poz){ },
+  'over' : function(poz){ console.log('mouse move')},
+  'play' : function(poz){ }
+}
+
+var mouseClickHandlers = {
+  'menu' : function(poz){ engine.handleMenuClick(poz)},
+  'pause': function(poz){ },
+  'score': function(poz){ },
+  'over' : function(poz){ engine.handleGameOverClick(poz)},
+  'play' : function(poz){engine.handlePlayClick(poz) }
+}
+
+var gameLoops = {
+  'menu' : function() {engine.runMenuLoop()},
+  'pause': function(){ },
+  'score': function(){ },
+  'over' : function(){ engine.runGameOverLoop()},
+  'play' : function(){ engine.runPlayLoop()}
+}
+//==========================================================/
+
+/*
+#Menu Info:
+The star information for the animation
+//==========================================================/
+*/
+//==========================================================/
+var menuInfo = [
+  {
+    poz: {x:105, y:305},
+    size: {x:40 ,y:40},
+    src:'assets/star1.png',
+    imgSize:{x:120, y:24},
+    sprite:{x:24, y:24},
+    spriteNum: 5,
+    timer:100,
+    updateTick:350
+  },
+  {
+    poz: {x:55, y:100},
+    size: {x:80, y:80},
+    src:'assets/star2.png',
+    imgSize:{x:300, y:70},
+    sprite:{x:60, y:70},
+    spriteNum: 5,
+    timer:250,
+    updateTick:450
+  }
+]
+
+var menuButtonsInfo =  {
+    start:{x:255, y:150},
+    size: {x:100, y:50},
+    offset: {x:0, y:25},
+    textSize: 16,
+    btnNum:3,
+    actions: ['start', 'options', 'help'],
+    handlers: {
+      0: function() { engine.initNewGame(); engine.state = 'play'},
+      1: function() {console.log('options is clicked')},
+      2: function() {console.log('help is clicked')},
+    }
+}
+
+var menuButtonOver = {
+  start:{x:255, y:150},
+  size: {x:100, y:50},
+  offset: {x:0, y:25},
+  textSize: 15,
+  btnNum:1,
+  actions: ['to menu'],
+  handlers: {
+    0: function() {engine.state = 'menu'},
+  }
+}
+
 //==========================================================/
